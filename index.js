@@ -16,6 +16,7 @@ async function run() {
     try {
         await client.connect();
         const toolCollection = client.db("staff-n-more").collection("tools");
+        const orderCollection = client.db("staff-n-more").collection("orders");
 
         app.get('/tools', async (req, res) => {
             const query = {};
@@ -29,6 +30,17 @@ async function run() {
             const query = { _id: (ObjectId(id)) };
             const result = await toolCollection.findOne(query);
             res.send(result);
+        })
+
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            const query = { productName: order.productName, userName: order.userName }
+            const exists = await orderCollection.findOne(query);
+            if (exists) {
+                return res.send({ success: false, order: exists })
+            }
+            const result = await orderCollection.insertOne(order);
+            res.send({ success: true, result });
         })
 
         console.log('database connected');

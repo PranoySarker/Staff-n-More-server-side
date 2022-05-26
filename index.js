@@ -32,6 +32,15 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/order', async (req, res) => {
+            // console.log(req.query)
+            // console.log(req.query.userName);
+            const userName = req.query.userName;
+            const query = { userName: userName };
+            const result = await orderCollection.find(query).toArray();
+            res.send(result);
+        })
+
         app.post('/order', async (req, res) => {
             const order = req.body;
             const query = { productName: order.productName, userName: order.userName }

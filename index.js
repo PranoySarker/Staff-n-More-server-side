@@ -50,6 +50,19 @@ async function run() {
             res.send(result);
         })
 
+        app.post('/tool', async (req, res) => {
+            const tool = req.body;
+            const result = await toolCollection.insertOne(tool);
+            res.send(result);
+        })
+
+        app.delete('/tool/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await toolCollection.deleteOne(query);
+            res.send(result);
+        })
+
         app.get('/order', verifyJwt, async (req, res) => {
             const userName = req.query.userName;
             const decodedEmail = req.decoded.email;
